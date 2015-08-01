@@ -1,0 +1,15 @@
+{
+    "name": "code2image",
+    "description": "Create a image file from a code with highlighting",
+    "version": "0.0.1",
+    "dependencies": {
+        "jade": "*",
+        "lodash": "*",
+        "async": "*",
+        "highlight.js": "*",
+        "body-parser": "*",
+        "express": "*",
+        "htmlparser2": "*",
+        "js-yaml": "*"
+    }
+}
