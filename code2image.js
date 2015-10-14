@@ -10,7 +10,7 @@ var _ = require('lodash');
 var default_styles = yaml.safeLoad(fs.readFileSync(
     path.join(__dirname, 'themes', 'default.yml'), 'utf8'));
 
-function Code2Image(code, name, styles){
+function Code2Image(code, name, styles, cb){
     var styles = _.merge(styles || {}, default_styles);
 
     var subs = ['javascript'];
@@ -64,6 +64,7 @@ function Code2Image(code, name, styles){
 
     var out = fs.createWriteStream(path.join(__dirname, name));
     canvas.pngStream().pipe(out);
+    out.on('close', cb);
 }
 
 module.exports = Code2Image;

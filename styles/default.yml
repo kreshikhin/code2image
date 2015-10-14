@@ -1,0 +1,18 @@
+font: 18px monospace
+lineHeight: 20px
+color: '#555'
+background: white
+keyword: black
+built_in: black
+number: black
+string: green
+comment: gray
+decorator: black
+function: black
+class: black
+title: black
+params: black
+section: black
+regexp: red
+preprocessor: black
+attribute: black

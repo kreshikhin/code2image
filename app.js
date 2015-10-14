@@ -9,6 +9,7 @@ var moment = require('moment');
 var express = require('express');
 var crypto = require('crypto');
 var path = require('path');
+var code2image = require('./code2image');
 
 moment.locale('ru-RU');
 
@@ -16,6 +17,8 @@ var port = 1337;
 var address = '127.0.0.1';
 
 var app = express();
+
+var CNAME = fs.readFileSync(path.join(__dirname, 'CNAME'), 'utf8');
 
 var bodyParser = require('body-parser');
 
@@ -27,53 +30,34 @@ app.use(bodyParser.json());
 app.set('views', __dirname);
 app.set('view engine', 'jade');
 
-// production
-//app.use(stylus.middleware({src: __basedir + '/assets', dest: __basedir + '/public'}));
-
-// development
-/*
-app.get('/:filename.css', function (req, res) {
-    var filename = req.params.filename + '.styl';
-    var styl = fs.readFileSync(__basedir + '/styles/' + filename, 'utf8');
-    stylus.render(styl, { filename: filename, paths: [__basedir + '/styles/'] }, function (err, css) {
-        if(err){throw err};
-        res.end(css);
-    });
-});
-*/
-
-var example = "var hello = 'world';\nconsole.log(hello);\nconsole.log(hello);\n";
-
+app.use(express.static(__dirname + '/scripts'));
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/assets'));
 
 app.get('/', function(req, res){
+    res.render('index');
+});
+
+app.post('/', function(req, res){
     var subs = ['javascript'];
-    var html = '<pre><code>' + hl.highlightAuto(example, subs).value + '</pre></code>';
+
+    var code = req.body.code;
+
     var shasum = crypto.createHash('sha256');
-    shasum.update(example);
-    var img = shasum.digest('hex') + '.png'
-    var filename = path.join(__dirname, 'public', img);
-    var css = fs.readFileSync(path.join(__dirname, 'codestyle.css'));
+    shasum.update(code);
+    var image = shasum.digest('hex').substring(0, 12) + '.png'
 
-    var renderStream = webshot('<style>' + css + '</style>' + html, {
-        siteType:'html',
-        streamType: 'png',
-        quality: 100
-    });
+    code2image(code, 'public/' + image, {}, function(){
+        console.log('finished?');
 
-    var file = fs.createWriteStream(filename, {encoding: 'binary'});
-
-    renderStream.on('data', function(data) {
-      file.write(data.toString('binary'), 'binary');
-    });
-
-    renderStream.on('end', function(){
-        res.render('index', {
-            text: html,
-            img: img
+        res.send({
+            status: 'ok',
+            image: image,
+            cname: CNAME
         });
     });
 });
+
 
 var server = app.listen(8000, function(){
     console.log('Server is listening on http://%s:%d',
