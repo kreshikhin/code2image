@@ -45,7 +45,7 @@ app.post('/', function(req, res){
 
     var shasum = crypto.createHash('sha256');
     shasum.update(code);
-    var image = shasum.digest('hex').substring(0, 12) + '.png'
+    var image = shasum.digest('hex').substring(0, 12) + '.png';
 
     code2image(code, 'public/' + image, {}, function(){
         console.log('finished?');

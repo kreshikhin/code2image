@@ -42,14 +42,20 @@ function Code2Image(code, name, styles, cb){
             // draw text
             splitText = text.split("\n");
             console.log(splitText);
-            ctx.fillText(splitText[0], x, y)
+
             m = ctx.measureText(splitText[0]);
+            if(x + m.width > canvas.width){
+                x = x0;
+                y += lineHeight;
+            }
+            ctx.fillText(splitText[0], x, y)
             x += m.width;
             for(var i = 1; i < splitText.length; i++){
                 y += lineHeight;
+                x = x0;
                 ctx.fillText(splitText[i], x, y);
                 m = ctx.measureText(splitText[i]);
-                x = x0 + m.width;
+                x += m.width;
             }
         },
         onclosetag: function(tagname){
