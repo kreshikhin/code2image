@@ -4,7 +4,7 @@
   [![NPM Downloads][downloads-image]][downloads-url]
   [![Build Status][travis-image]][travis-url]
 
-  Render an iamge by a code snippet based on [node-canvas](https://github.com/Automattic/node-canvas) module.
+  It renders an image from a code snippet. It based on [node-canvas](https://github.com/Automattic/node-canvas) module.
 
 ## Installation
 
