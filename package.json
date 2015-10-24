@@ -3,6 +3,7 @@
     "description": "Create a image file from a code with highlighting",
     "version": "0.0.1",
     "dependencies": {
+        "tolmach": "*",
         "jade": "*",
         "lodash": "*",
         "async": "*",

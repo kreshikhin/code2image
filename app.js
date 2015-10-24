@@ -1,17 +1,13 @@
 var jade = require('jade');
-var less = require('less');
 
 var http = require('http');
 var fs = require('fs');
 var _ = require('lodash');
 var async = require('async');
-var moment = require('moment');
 var express = require('express');
 var crypto = require('crypto');
 var path = require('path');
 var code2image = require('./code2image');
-
-moment.locale('ru-RU');
 
 var port = 1337;
 var address = '127.0.0.1';

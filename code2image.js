@@ -1,11 +1,11 @@
 var Canvas = require('canvas');
-var webshot = require('webshot');
 var hl = require('highlight.js');
 var htmlparser = require("htmlparser2");
 var fs = require('fs');
 var path = require('path');
 var yaml = require('js-yaml');
 var _ = require('lodash');
+var tolmach = require('tolmach');
 
 var default_styles = yaml.safeLoad(fs.readFileSync(
     path.join(__dirname, 'themes', 'default.yml'), 'utf8'));
@@ -13,7 +13,7 @@ var default_styles = yaml.safeLoad(fs.readFileSync(
 function Code2Image(code, name, styles, cb){
     var styles = _.merge(styles || {}, default_styles);
 
-    var subs = ['javascript'];
+    var subs = [tolmach.detect(code)];
     var canvas = new Canvas(600, 600);
     var ctx = canvas.getContext('2d');
 
