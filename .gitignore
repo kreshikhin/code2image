@@ -1,3 +1,4 @@
 *.png
 node_modules/
 .DS_Store
+!test/example/test.png

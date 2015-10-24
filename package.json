@@ -1,17 +1,23 @@
 {
     "name": "code2image",
-    "description": "Create a image file from a code with highlighting",
     "version": "0.0.1",
+    "description": "Create a image file from a code with highlighting",
+    "licence": "MIT",
+    "main": "code2image",
+    "private": false,
     "dependencies": {
         "tolmach": "*",
-        "jade": "*",
         "lodash": "*",
         "async": "*",
         "highlight.js": "*",
-        "body-parser": "*",
-        "express": "*",
         "htmlparser2": "*",
         "js-yaml": "*",
         "canvas": "*"
+    },
+    "devDependencies": {
+        "mocha": "2.3.3"
+    },
+    "scripts": {
+        "test": "mocha test"
     }
 }

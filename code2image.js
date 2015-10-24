@@ -10,7 +10,7 @@ var tolmach = require('tolmach');
 var default_styles = yaml.safeLoad(fs.readFileSync(
     path.join(__dirname, 'themes', 'default.yml'), 'utf8'));
 
-function Code2Image(code, name, styles, cb){
+var render = function(code, filepath, styles, cb){
     var styles = _.merge(styles || {}, default_styles);
 
     var subs = [tolmach.detect(code)];
@@ -68,9 +68,11 @@ function Code2Image(code, name, styles, cb){
     parser.write(hl.highlightAuto(code, subs).value);
     parser.end();
 
-    var out = fs.createWriteStream(path.join(__dirname, name));
+    var out = fs.createWriteStream(filepath);
     canvas.pngStream().pipe(out);
     out.on('close', cb);
 }
 
-module.exports = Code2Image;
+module.exports = {
+    render: render
+};
