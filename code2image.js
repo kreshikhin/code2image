@@ -14,7 +14,7 @@ var render = function(code, filepath, styles, cb){
     var styles = _.merge(styles || {}, default_styles);
 
     var subs = [tolmach.detect(code)];
-    var canvas = new Canvas(600, 600);
+    var canvas = new Canvas(styles.width || 600, 600);
     var ctx = canvas.getContext('2d');
 
     ctx.fillStyle = styles.background;

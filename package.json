@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "Create a image file from a code with highlighting",
     "licence": "MIT",
+    "author": "Denis Kreshikhin",
     "main": "code2image",
     "private": false,
     "repository" : {
