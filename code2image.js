@@ -10,6 +10,54 @@ var tolmach = require('tolmach');
 var default_styles = yaml.safeLoad(fs.readFileSync(
     path.join(__dirname, 'themes', 'default.yml'), 'utf8'));
 
+var reduceIndent = function(lines){
+    var weights = [];
+    var indents = [];
+    for(var tsize = 1; tsize <= 8; tsize ++){
+        var counters = {};
+        _.each(lines, function(line){
+            if(/^\s*$/.test(line)) return;
+            var counter = 0;
+            _.each(line, function(symbol){
+                switch(symbol){
+                    case " ": counter ++; break;
+                    case "\t": counter += (tsize - counter % tsize); break;
+                    default: return false;
+                }
+            });
+
+            counters[counter] = (counters[counter] || 0) + 1;
+        });
+
+        delete counters['0'];
+        indents[tsize] =  _.min(_.keys(counters));
+        weights[tsize] = _.size(counters);
+    }
+
+    var optimal = _.min(weights);
+    var indent = indents[optimal];
+
+    var result = [];
+    _.each(lines, function(line){
+        var counter = 0;
+        _.each(line, function(symbol){
+            switch(symbol){
+                case " ": counter ++; break;
+                case "\t": counter += (optimal - counter % optimal); break;
+                default: return false;
+            }
+        });
+
+        if(counter >= indent){
+            counter -= indent;
+        }
+
+        result.push(new Array(counter+1).join(' ') + line.trim());
+    });
+
+    return result;
+};
+
 var render = function(code, filepath, styles, cb){
     var styles = _.merge(styles || {}, default_styles);
 
@@ -74,5 +122,6 @@ var render = function(code, filepath, styles, cb){
 }
 
 module.exports = {
-    render: render
+    render: render,
+    reduceIndent: reduceIndent
 };
