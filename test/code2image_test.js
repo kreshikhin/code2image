@@ -19,12 +19,11 @@ describe('code2image',function(){
     })
 
     it('should reduce indent', function(){
-        var lines = codeWithIndent.split("\n");
-        var result = code2image.reduceIndent(lines);
-        assert.equal(result.join(' ').replace(/ /g, '_'), [
+        var result = code2image.reduceIndent(codeWithIndent);
+        assert.equal(result.replace(/ /g, '_'), [
             'setTimeout(function(){',
             "\u0020\u0020\u0020\u0020console.log(\"Hello World!\");",
-            '}); '
-        ].join(' ').replace(/ /g, '_'));
+            '});\n'
+        ].join("\n").replace(/ /g, '_'));
     });
 });

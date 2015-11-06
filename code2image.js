@@ -10,7 +10,9 @@ var tolmach = require('tolmach');
 var default_styles = yaml.safeLoad(fs.readFileSync(
     path.join(__dirname, 'themes', 'default.yml'), 'utf8'));
 
-var reduceIndent = function(lines){
+var reduceIndent = function(code){
+    var lines = code.split("\n");
+
     var weights = [];
     var indents = [];
     for(var tsize = 1; tsize <= 8; tsize ++){
@@ -55,7 +57,7 @@ var reduceIndent = function(lines){
         result.push(new Array(counter+1).join(' ') + line.trim());
     });
 
-    return result;
+    return result.join("\n");
 };
 
 var render = function(code, filepath, styles, cb){
@@ -113,7 +115,7 @@ var render = function(code, filepath, styles, cb){
         }
     }, {decodeEntities: true});
 
-    parser.write(hl.highlightAuto(code, subs).value);
+    parser.write(hl.highlightAuto(reduceIndent(code), subs).value);
     parser.end();
 
     var out = fs.createWriteStream(filepath);
