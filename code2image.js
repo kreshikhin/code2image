@@ -31,7 +31,6 @@ var reduceIndent = function(code){
             counters[counter] = (counters[counter] || 0) + 1;
         });
 
-        delete counters['0'];
         indents[tsize] =  _.min(_.keys(counters));
         weights[tsize] = _.size(counters);
     }
@@ -60,38 +59,89 @@ var reduceIndent = function(code){
     return result.join("\n");
 };
 
+var countOfLines = function(code){
+    return code.split("\n").length;
+}
+
+var maxLength = function(code){
+    var lines = code.split("\n");
+    return _.max(_.map(lines, function(line){ return line.length; }));
+}
+
+var parseStyle = function(str){
+    var vars = str.split(' ');
+    //console.log(str, vars);
+    return {
+        color: vars[0],
+        weight: vars[1]
+    }
+}
+
+var getOptimalFontSize = function(count, width, styles){
+    styles = styles || {};
+    var fontMinSize = parseInt(styles.fontMinSize || 12);
+    var fontSize = parseInt(styles.fontSize || 16);
+    var ratio = styles.fontRatio || 0.7;
+
+    var result = Math.round(width / (ratio * count));
+
+    if(result < fontMinSize){
+        result = fontMinSize;
+    }
+
+    if(result > fontSize){
+        result = fontSize;
+    }
+
+    return result;
+}
+
 var render = function(code, filepath, styles, cb){
-    var styles = _.merge(styles || {}, default_styles);
+    styles = _.merge(default_styles, styles || {});
+    code = reduceIndent(code);
+
+    var lineHeight = parseInt(styles.lineHeight);
+    var x0 = 20;
+    var x = 20;
+    var y = 30;
+
+    var width = styles.width || 600;
+    var fontSize = getOptimalFontSize(maxLength(code), width - 2 * x, styles) + 'px';
+    var font = fontSize + ' ' + styles.fontName;
 
     var subs = [tolmach.detect(code)];
-    var canvas = new Canvas(styles.width || 600, 600);
+    var canvas = new Canvas(styles.width || 600, y + lineHeight * countOfLines(code));
     var ctx = canvas.getContext('2d');
 
     ctx.fillStyle = styles.background;
     ctx.fillRect(0,0, canvas.width, canvas.height);
     ctx.fillStyle = styles.color;
 
-    var lineHeight = parseInt(styles.lineHeight);
-    var x0 = 30;
-    var x = 30;
-    var y = 30;
-
-    ctx.font = styles.font;
+    ctx.font = font;
 
     var parser = new htmlparser.Parser({
         onopentag: function(name, attribs){
             if(name === "span"){
                 console.log(attribs.class);
                 var name = attribs.class.replace('hljs-', '');
-                if(styles[name]){
-                    ctx.fillStyle = styles[name];
+                var fontname = name + '-font';
+
+                if(!styles[name]) return;
+
+                var st = parseStyle(styles[name]);
+                console.log(st);
+                if(st.color != undefined){
+                    ctx.fillStyle = st.color;
+                }
+                if(st.weight != undefined){
+                    ctx.font = st.weight + ' ' + font;
                 }
             }
         },
         ontext: function(text){
             // draw text
             splitText = text.split("\n");
-            console.log(splitText);
+            //console.log(splitText);
 
             m = ctx.measureText(splitText[0]);
             if(x + m.width > canvas.width){
@@ -111,11 +161,13 @@ var render = function(code, filepath, styles, cb){
         onclosetag: function(tagname){
             if(tagname === "span"){
                 ctx.fillStyle = styles.color;
+                ctx.font = font;
+                console.log(font);
             }
         }
     }, {decodeEntities: true});
 
-    parser.write(hl.highlightAuto(reduceIndent(code), subs).value);
+    parser.write(hl.highlightAuto(code, subs).value);
     parser.end();
 
     var out = fs.createWriteStream(filepath);

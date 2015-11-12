@@ -1,8 +1,11 @@
-font: 18px monospace
+fontName: monospace
+fontMinSize: 6px
+fontSize: 18px
+fontRatio: 1.4
 lineHeight: 20px
-color: '#555'
+color: black
 background: white
-keyword: black
+keyword: '#444 bold'
 built_in: black
 number: black
 string: green

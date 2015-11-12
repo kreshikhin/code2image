@@ -8,8 +8,9 @@ var fs = require('fs');
 var code = "var hello = 'hello';\nvar world = 'world';\nconsole.log(hello + ' ' + world);";
 
 var codeWithIndent = fs.readFileSync(path.join(__dirname, 'example', 'code_with_tabs.txt'), 'utf8');
+var codeWithoutIndent = fs.readFileSync(path.join(__dirname, 'example', 'code.txt'), 'utf8');
 
-describe('code2image',function(){
+describe('code2image', function(){
     it('should render an image by a snippet of a code', function(done){
         code2image.render(code, path.join(__dirname, 'test.png'), undefined, function(){
             setTimeout(function(){
@@ -20,6 +21,13 @@ describe('code2image',function(){
 
     it('should reduce indent', function(){
         var result = code2image.reduceIndent(codeWithIndent);
+        assert.equal(result.replace(/ /g, '_'), [
+            'setTimeout(function(){',
+            "\u0020\u0020\u0020\u0020console.log(\"Hello World!\");",
+            '});\n'
+        ].join("\n").replace(/ /g, '_'));
+
+        var result = code2image.reduceIndent(codeWithoutIndent);
         assert.equal(result.replace(/ /g, '_'), [
             'setTimeout(function(){',
             "\u0020\u0020\u0020\u0020console.log(\"Hello World!\");",
