@@ -1,0 +1,6 @@
+    var _ = require('lodash');
+
+    _.each(items, function(item){
+        // puts out each item
+        console.log("item:", item);
+    });
