@@ -177,5 +177,6 @@ var render = function(code, filepath, styles, cb){
 
 module.exports = {
     render: render,
-    reduceIndent: reduceIndent
+    reduceIndent: reduceIndent,
+    listLanguages: hl.listLanguages
 };
