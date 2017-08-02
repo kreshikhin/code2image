@@ -1,8 +1,8 @@
 {
     "name": "code2image",
-    "version": "0.9.0",
-    "description": "Create an image from a code with highlighting",
-    "licence": "MIT",
+    "version": "0.9.1",
+    "description": "The library allows to create an image from a code with custom highlighting",
+    "license": "MIT",
     "author": "Denis Kreshikhin",
     "main": "code2image",
     "private": false,
