@@ -34,4 +34,9 @@ describe('code2image', function(){
             '});\n'
         ].join("\n").replace(/ /g, '_'));
     });
+
+    it('should return a list of languages', function(){
+        var languages = code2image.listLanguages();
+        assert(languages);
+    })
 });
