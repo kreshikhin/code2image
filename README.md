@@ -2,9 +2,8 @@
 
   [![NPM Version][npm-image]][npm-url]
   [![NPM Downloads][downloads-image]][downloads-url]
-  [![Build Status][travis-image]][travis-url]
 
-  It renders an image from a code snippet. It based on [node-canvas](https://github.com/Automattic/node-canvas) module.
+  The library allows to render an image from a code snippet. It's based on [node-canvas](https://github.com/Automattic/node-canvas) module.
 
 ## Installation
 
