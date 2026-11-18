@@ -109,7 +109,7 @@ npm install
 npm test
 ```
 
-Tests render real PNGs and check the image header, size, background, and string color. Continuous integration runs them on Node.js 22, 24, and 25.
+Tests use the built-in Node.js runner. They render real PNGs and check the image header, size, background, and string color. Continuous integration runs them on Node.js 22, 24, and 25.
 
 ## License
 

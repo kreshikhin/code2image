@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { after, describe, it } = require('node:test');
 const { createCanvas, loadImage } = require('canvas');
 const code2image = require('../code2image');
 
@@ -146,23 +147,14 @@ describe('code2image', function () {
         assert.ok(hasGreen(image.data));
     });
 
-    it('reports write errors through the callback', function () {
+    it('reports write errors through the callback', async function () {
         const filepath = path.join(os.tmpdir(), 'code2image-missing-' + process.pid, 'out.png');
 
-        return render(snippet, filepath).then(
-            () => assert.fail('expected a write error'),
-            (err) => {
-                assert.ok(err);
-                assert.strictEqual(err.code, 'ENOENT');
-            }
-        );
+        await assert.rejects(render(snippet, filepath), { code: 'ENOENT' });
     });
 
-    it('rejects invalid arguments', function (done) {
-        code2image.render(null, 'out.png', {}, (err) => {
-            assert.ok(err instanceof TypeError);
-            done();
-        });
+    it('rejects invalid arguments', async function () {
+        await assert.rejects(render(null, 'out.png', {}), TypeError);
     });
 
     it('requires a callback', function () {
