@@ -1,14 +1,19 @@
-var c2i = require('../code2image');
-var fs = require('fs');
-var path = require('path');
+const code2image = require('../code2image');
+const fs = require('node:fs');
+const path = require('node:path');
 
-var code = fs.readFileSync('big.txt', 'utf8');
+const code = fs.readFileSync(path.join(__dirname, 'big.txt'), 'utf8');
 
-c2i.render(code, path.join(__dirname, 'big.png'), {
+code2image.render(code, path.join(__dirname, 'big.png'), {
     width: 640,
-    fontName: 'NotCourierSans',
     lineHeight: 16,
     fontRatio: 0.7
-}, function(){
-    console.log('ok!');
+}, function (err) {
+    if (err) {
+        console.error(err);
+        process.exitCode = 1;
+        return;
+    }
+
+    console.log('wrote big.png');
 });

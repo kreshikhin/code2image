@@ -1,63 +1,116 @@
 # code2image
 
-  [![NPM Version][npm-image]][npm-url]
-  [![NPM Downloads][downloads-image]][downloads-url]
+[![npm version](https://img.shields.io/npm/v/code2image.svg)](https://www.npmjs.com/package/code2image)
+[![npm downloads](https://img.shields.io/npm/dm/code2image.svg)](https://www.npmjs.com/package/code2image)
+[![CI](https://github.com/kreshikhin/code2image/actions/workflows/ci.yml/badge.svg)](https://github.com/kreshikhin/code2image/actions/workflows/ci.yml)
 
-  The library allows to render an image from a code snippet. It's based on [node-canvas](https://github.com/Automattic/node-canvas) module.
+Render a syntax-highlighted PNG from a code snippet. Highlighting is done by [highlight.js](https://github.com/highlightjs/highlight.js), and the image is drawn with [node-canvas](https://github.com/Automattic/node-canvas).
+
+## Requirements
+
+- Node.js 20.9 or newer
+- A Cairo-capable build of `canvas`. Current `canvas` releases ship prebuilt binaries for common platforms. If installation compiles from source, install the [node-canvas system libraries](https://github.com/Automattic/node-canvas#compiling) first.
+
+`fontName` has to be a font family installed on the machine that draws the image. The default is `monospace`.
 
 ## Installation
 
-    $ npm install code2image
-
-## Example
-
-```js
-var code2image = require('code2image');
-var styles = { // it's default styles
-    fontName: "monospace",
-    fontMinSize: '6px',
-    fontSize: '18px',
-    fontRatio: 1,
-    lineHeight: '20px',
-    color: "black",
-    background: "white",
-    keyword: '#444 bold',
-    built_in: "black",
-    number: "black",
-    string: "green",
-    comment: "gray",
-    decorator: "black",
-    function: "black",
-    class: "black",
-    title: "black",
-    params: "black",
-    section: "black",
-    regexp: "red",
-    preprocessor: "black",
-    attribute: "black",
-};
-
-code2image.render("var hello = 'hello';\nvar world = 'world';\nconsole.log(hello + ' ' + world);", 'test.png', styles, function(){
-    console.log('ok!');
-});
-
+```sh
+npm install code2image
 ```
 
-Result:
+## Usage
 
-![alt tag](https://raw.github.com/kreshikhin/code2image/master/test/example/test.png)
+```js
+const code2image = require('code2image');
 
-## Supported languages
+const code = [
+    "var hello = 'hello';",
+    "var world = 'world';",
+    "console.log(hello + ' ' + world);"
+].join('\n');
 
-https://github.com/kreshikhin/tolmach/blob/master/README.md#supported-languages
+code2image.render(code, 'snippet.png', {
+    string: 'green',
+    keyword: '#444 bold'
+}, function (err) {
+    if (err) {
+        throw err;
+    }
+});
+```
+
+![Rendered snippet](test/example/test.png)
+
+`styles` is optional. Pass the callback as the third argument to keep the theme defaults:
+
+```js
+code2image.render(code, 'snippet.png', function (err) {
+    if (err) {
+        throw err;
+    }
+});
+```
+
+## API
+
+### `render(code, filepath, [styles], callback)`
+
+Draw `code` into a PNG at `filepath`.
+
+- `code` is a string.
+- `filepath` is the output path. Parent directories are not created.
+- `styles` overrides the [default theme](themes/default.yml).
+- `callback(err)` is called after the file is written. `err` is `null` on success.
+
+A shared leading indent is removed before drawing, and tabs are expanded to the width that best matches the surrounding indentation.
+
+### `reduceIndent(code)`
+
+Return `code` with the shared indent removed. Useful if you want the same normalization without drawing.
+
+### `listLanguages()`
+
+Return the language ids highlight.js can recognize. Detection itself is automatic.
+
+## Styles
+
+Defaults live in [`themes/default.yml`](themes/default.yml). Sizes accept a number or a string with a `px` suffix. A token style is a color, optionally followed by a canvas font weight such as `bold`.
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `width` | `600` | Image width in pixels |
+| `fontName` | `monospace` | Font family used to draw the code |
+| `fontSize` | `18px` | Maximum font size |
+| `fontMinSize` | `6px` | Minimum font size for long lines |
+| `fontRatio` | `1` | Approximate character width relative to the font size |
+| `lineHeight` | `20px` | Distance between baselines |
+| `color` | `black` | Default text color |
+| `background` | `white` | Background color |
+| `keyword`, `string`, `comment`, `number`, … | see the theme | Colors for highlight.js token classes |
+
+Long lines use a smaller font so the snippet fits in `width`. Token classes follow highlight.js names (`keyword`, `string`, `title`, `function`, and so on).
+
+## Examples
+
+The scripts in [`examples/`](examples) read a snippet from the same directory and write a PNG next to it:
+
+```sh
+node examples/small.js
+node examples/medium.js
+node examples/big.js
+node examples/64lines.js
+```
+
+## Development
+
+```sh
+npm install
+npm test
+```
+
+Tests render real PNGs and check the image header, size, background, and string color. Continuous integration runs them on Node.js 22, 24, and 25.
 
 ## License
 
-  [MIT](LICENSE)
-
-[npm-image]: https://img.shields.io/npm/v/code2image.svg
-[npm-url]: https://npmjs.org/package/code2image
-[downloads-image]: https://img.shields.io/npm/dm/code2image.svg
-[downloads-url]: https://npmjs.org/package/code2image
-[travis-image]: https://img.shields.io/travis/kreshikhin/code2image/master.svg
-[travis-url]: https://travis-ci.org/kreshikhin/code2image
+[MIT](LICENSE)
