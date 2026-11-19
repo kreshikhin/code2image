@@ -111,6 +111,27 @@ npm test
 
 Tests use the built-in Node.js runner. They render real PNGs and check the image header, size, background, and string color. Continuous integration runs them on Node.js 22, 24, and 25.
 
+## Publishing
+
+Pushing a tag `vX.Y.Z` publishes that version to npm. The tag has to match `version` in `package.json`. The workflow [`.github/workflows/publish.yml`](.github/workflows/publish.yml) authenticates with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), so GitHub does not store an npm token. Provenance is attached automatically when the repository is public.
+
+A maintainer connects the workflow once, from npm 11.15 or newer:
+
+```sh
+npm login
+npm trust github code2image \
+  --repo kreshikhin/code2image \
+  --file publish.yml \
+  --allow-publish
+```
+
+The same fields can be entered under the package's Trusted Publisher settings on npmjs.com. The workflow file has to be on the default branch before that connection is created, and the first publish has to succeed within two days.
+
+```sh
+git tag v0.10.0
+git push origin v0.10.0
+```
+
 ## License
 
 [MIT](LICENSE)
