@@ -128,8 +128,8 @@ npm trust github code2image \
 The same fields can be entered under the package's Trusted Publisher settings on npmjs.com. The workflow file has to be on the default branch before that connection is created, and the first publish has to succeed within two days.
 
 ```sh
-git tag v0.10.0
-git push origin v0.10.0
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 ## License

@@ -1,6 +1,6 @@
 {
   "name": "code2image",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "description": "Render a syntax-highlighted image from a code snippet",
   "license": "MIT",
   "author": "Denis Kreshikhin",
