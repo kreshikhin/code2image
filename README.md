@@ -113,7 +113,7 @@ Tests use the built-in Node.js runner. They render real PNGs and check the image
 
 ## Publishing
 
-Pushing a tag `vX.Y.Z` publishes that version to npm. The tag has to match `version` in `package.json`. The workflow [`.github/workflows/publish.yml`](.github/workflows/publish.yml) authenticates with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), so GitHub does not store an npm token. Provenance is attached automatically when the repository is public.
+Publishing runs from [`.github/workflows/publish.yml`](.github/workflows/publish.yml) when a `vX.Y.Z` tag is pushed, or from the Actions tab with **Run workflow**. A tag has to match `version` in `package.json`. A manual run publishes the version already committed on the selected branch. The workflow authenticates with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), so GitHub does not store an npm token. Provenance is attached automatically when the repository is public.
 
 A maintainer connects the workflow once, from npm 11.15 or newer:
 
